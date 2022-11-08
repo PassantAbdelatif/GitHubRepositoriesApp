@@ -13,67 +13,65 @@ class GitHubRepositoriesListPresenter: ViewToPresenterGitHubRepositoriesProtocol
     var stubbedGitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProtocol!
 
     var gitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProtocol? {
+        set {}
         get {
             return stubbedGitHubRepositoriesInteractor
         }
-        set {}
     }
 
     var stubbedGitHubRepositoriesView: PresenterToViewGitHubRepositoriesProtocol!
 
     var gitHubRepositoriesView: PresenterToViewGitHubRepositoriesProtocol? {
+        set {}
         get {
             return stubbedGitHubRepositoriesView
         }
-        set {}
     }
 
     var stubbedPage: Int! = 0
 
     var page: Int {
+        set {}
         get {
             return stubbedPage
         }
-        set {}
     }
 
     var stubbedRepositoriesCountPerPage: Int! = 0
 
     var repositoriesCountPerPage: Int {
+        set {}
         get {
             return stubbedRepositoriesCountPerPage
         }
-        set {}
     }
 
     var stubbedHasNext: Bool!
 
     var hasNext: Bool? {
+        set {}
         get {
             return stubbedHasNext
         }
-        set {}
     }
 
     var stubbedSearchString: String!
 
     var searchString: String? {
+        set {}
         get {
             return stubbedSearchString
         }
-        set {}
     }
 
     var stubbedScreenSearchMode: GitHubRepositoriesSearchViewMode!
 
     var screenSearchMode: GitHubRepositoriesSearchViewMode? {
+        set {}
         get {
             return stubbedScreenSearchMode
         }
-        set {}
     }
 
-    func getGitHubRepositoriesPerPage() {
-        
-    }
+    func getGitHubRepositoriesPerPage() {}
 }

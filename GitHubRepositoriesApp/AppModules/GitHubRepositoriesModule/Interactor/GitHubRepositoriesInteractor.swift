@@ -21,13 +21,10 @@ class GitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProto
             //first time to get your data from network
             //or user make pull to refresh with out making any search
             //you have to clear your coredata
-            
             if let allGitHubRepositories: [NSManagedObject] = networkClient?.allGitHubRepositroies() {
                 if !allGitHubRepositories.isEmpty {
                     networkClient?.resetCoreData()
-                    
                 }
-                
             }
             getAllGitHubRepositories()
            

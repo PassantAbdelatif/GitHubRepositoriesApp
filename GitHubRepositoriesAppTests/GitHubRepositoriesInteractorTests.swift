@@ -39,20 +39,22 @@ class GitHubRepositoriesInteractorTests: XCTestCase {
         repositoriesInteractorSpy.getGitHubRepositoriesPerPage(screenSearchMode: .searchMode)
         XCTAssertTrue(repositoriesInteractorSpy.invokedGetGitHubRepositoriesPerPage)
     }
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-}
-
-class NetworkClientMock: NetworkClient {
-    var resetCoreDataCalled = false
-    override func resetCoreData() {
-        resetCoreDataCalled = true
+    
+    func testIfNetworkRequestGetAllGHRepositries() {
+        repositoriesInteractorSpy.getAllGitHubRepositories()
+        XCTAssertTrue(repositoriesInteractorSpy.invokedGetAllGitHubRepositories)
     }
     
-    var allGitHubRepositroiesCalled = false
-    override func allGitHubRepositroies(searchString: String? = nil) -> [NSManagedObject]? {
-        allGitHubRepositroiesCalled = true
-        return [GitHubRepository()]
+    func testfunctionThatReturnDataRangePerPageWhenSearchModeIsOn() {
+        repositoriesInteractorSpy.searchString = "test"
+        repositoriesInteractorSpy.networkClient?.allGitHubRepositroies(searchString: repositoriesInteractorSpy.searchString)
+        XCTAssertTrue(((repositoriesInteractorSpy.networkClient?.invokedAllGitHubRepositroies) != nil))
+        repositoriesInteractorSpy.getGitHubRepositoriesPerPage(screenSearchMode: .searchMode)
+        XCTAssertTrue(repositoriesInteractorSpy.invokedGetGitHubRepositoriesSavedInCoreDataPerPage)
+        
+    }
+    
+    override func tearDownWithError() throws {
+        // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 }

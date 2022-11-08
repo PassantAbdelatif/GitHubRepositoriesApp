@@ -19,7 +19,7 @@ class GitHubRepositoriesInteractorSpy: PresenterToInteractorGitHubRepositoriesPr
     var invokedPresenterGetterCount = 0
     var stubbedPresenter: InteractorToPresenterGitHubRepositoriesProtocol!
 
-    var networkClient: NetworkClient?
+    var networkClient: NetworkClientSpy<Any>?
     var presenter: InteractorToPresenterGitHubRepositoriesProtocol? {
         set {
             invokedPresenterSetter = true
@@ -90,10 +90,27 @@ class GitHubRepositoriesInteractorSpy: PresenterToInteractorGitHubRepositoriesPr
         if (page == 1 && screenSearchMode == GitHubRepositoriesSearchViewMode.originalMode ) {
             networkClient?.resetCoreData()
             networkClient?.allGitHubRepositroies()
+        } else {
+            self.getGitHubRepositoriesSavedInCoreDataPerPage()
         }
         invokedGetGitHubRepositoriesPerPageCount += 1
         invokedGetGitHubRepositoriesPerPageParameters = (screenSearchMode, ())
         invokedGetGitHubRepositoriesPerPageParametersList.append((screenSearchMode, ()))
+    }
+    var invokedGetAllGitHubRepositories = false
+    var invokedGetAllGitHubRepositoriesCount = 0
+
+    func getAllGitHubRepositories() {
+        invokedGetAllGitHubRepositories = true
+        invokedGetAllGitHubRepositoriesCount += 1
+    }
+
+    var invokedGetGitHubRepositoriesSavedInCoreDataPerPage = false
+    var invokedGetGitHubRepositoriesSavedInCoreDataPerPageCount = 0
+
+    func getGitHubRepositoriesSavedInCoreDataPerPage() {
+        invokedGetGitHubRepositoriesSavedInCoreDataPerPage = true
+        invokedGetGitHubRepositoriesSavedInCoreDataPerPageCount += 1
     }
 }
 

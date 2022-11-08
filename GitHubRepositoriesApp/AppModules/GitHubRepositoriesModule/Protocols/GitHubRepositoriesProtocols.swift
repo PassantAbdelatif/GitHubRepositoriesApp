@@ -27,6 +27,8 @@ protocol PresenterToInteractorGitHubRepositoriesProtocol {
     var searchString: String? {get set}
     
     func getGitHubRepositoriesPerPage(screenSearchMode: GitHubRepositoriesSearchViewMode)
+    func getAllGitHubRepositories()
+    func getGitHubRepositoriesSavedInCoreDataPerPage()
 }
 
 protocol InteractorToPresenterGitHubRepositoriesProtocol {
