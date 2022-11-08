@@ -51,7 +51,7 @@ public class NetworkDataManager {
         }
     }
     
-    public func fetch<T: NSManagedObject>(entity: T.Type) -> [NSManagedObject]? {
+    public func fetch<T: NSManagedObject>(entity: T.Type, searchString: String? = nil) -> [NSManagedObject]? {
         
         var results: [NSManagedObject]?
         
@@ -62,6 +62,11 @@ public class NetworkDataManager {
             if let fetchRequest: NSFetchRequest<T> = T.fetchRequest() as? NSFetchRequest<T> {
                 let sortDescriptor = NSSortDescriptor(key: "repositoryId", ascending: true)
                 fetchRequest.sortDescriptors = [sortDescriptor]
+                if let searchString = searchString {
+                    let repositoryNamePredicate = NSPredicate(format: "name contains[c] %@", searchString)
+                    fetchRequest.predicate = repositoryNamePredicate
+                }
+                
                 do {
                 results = try self.backgroundContext.fetch(fetchRequest) as! [T]
                 } catch let fetchErr {

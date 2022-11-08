@@ -26,6 +26,7 @@ protocol PresenterToInteractorGitHubRepositoriesProtocol {
     var presenter: InteractorToPresenterGitHubRepositoriesProtocol? {get set}
     var page: Int {get set}
     var repositoriesCountPerPage: Int {get set}
+    var searchString: String? {get set}
     
     func getGitHubRepositoriesSearchResult(gitHubRepositoriesToFilter: [GitHubRepository],
                                            searchString: String)

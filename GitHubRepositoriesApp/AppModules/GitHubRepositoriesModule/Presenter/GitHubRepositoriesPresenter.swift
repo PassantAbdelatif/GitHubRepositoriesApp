@@ -31,6 +31,7 @@ class GitHubRepositoriesPresenter: ViewToPresenterGitHubRepositoriesProtocol {
     func getGitHubRepositoriesPerPage() {
         gitHubRepositoriesInteractor?.page = page
         gitHubRepositoriesInteractor?.repositoriesCountPerPage = 10
+        gitHubRepositoriesInteractor?.searchString = searchString
         gitHubRepositoriesInteractor?.getGitHubRepositoriesPerPage(screenSearchMode: screenSearchMode ?? .originalMode)
     }
     

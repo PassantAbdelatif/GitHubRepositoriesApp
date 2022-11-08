@@ -21,6 +21,7 @@ class GitHubRepositoriesViewController: BaseViewController {
    
     // MARK: Properties
     var gitHubRepositoriesList: [GitHubRepositoryToView] = [GitHubRepositoryToView]()
+    var filteredGitHubRepositoriesList: [GitHubRepositoryToView] = [GitHubRepositoryToView]()
     var gitHubRepositoriesPresenter: ViewToPresenterGitHubRepositoriesProtocol?
     var spinner: UIActivityIndicatorView?
     lazy var emptyView : EmptyView = {
@@ -45,11 +46,19 @@ extension GitHubRepositoriesViewController {
     @objc private func textDidChange(sender: UITextField) {
         if let searchText = self.searchTextField.text,
            searchText.count >= 2 {
-            gitHubRepositoriesPresenter?.searchString = searchText
-            gitHubRepositoriesPresenter?.repositoriesToSearchIn = self.gitHubRepositoriesList
-            gitHubRepositoriesPresenter?.screenSearchMode = .searchMode
-            updateListStatus = .refresh
-            gitHubRepositoriesPresenter?.getGitHubRepositoriesPerPage()
+            getFilteredGitHubRepositories()
+        } else {
+            gitHubRepositoriesPresenter?.searchString = nil
+            gitHubRepositoriesPresenter?.screenSearchMode = .originalMode
+            //when user start to delete search string
+            //check current page
+            if gitHubRepositoriesPresenter?.page ?? 1 > 1 {
+                self.updateListStatus = .loadMore
+            } else {
+                self.updateListStatus = .refresh
+            }
+            
+            self.githubRepositoriesListTableView.reloadData()
         }
     }
 
@@ -64,6 +73,12 @@ extension GitHubRepositoriesViewController {
         
         gitHubRepositoriesPresenter?.getGitHubRepositoriesPerPage()
         
+    }
+    
+    func getFilteredGitHubRepositories() {
+        gitHubRepositoriesPresenter?.searchString = self.searchTextField.text
+        gitHubRepositoriesPresenter?.screenSearchMode = .searchMode
+        gitHubRepositoriesPresenter?.getGitHubRepositoriesPerPage()
     }
 }
 // MARK: SetUpUI & Register Cells
@@ -117,12 +132,35 @@ extension GitHubRepositoriesViewController: PresenterToViewGitHubRepositoriesPro
     func sendGitHubRepositoriesToView(gitHubRepositories: [GitHubRepositoryToView]) {
         switch self.updateListStatus {
         case .refresh:
-            
-            self.gitHubRepositoriesList.removeAll()
-            self.gitHubRepositoriesList = gitHubRepositories
+            switch gitHubRepositoriesPresenter?.screenSearchMode {
+            case .originalMode:
+                self.gitHubRepositoriesList.removeAll()
+                self.gitHubRepositoriesList = gitHubRepositories
+            case .searchMode:
+                self.filteredGitHubRepositoriesList.removeAll()
+                self.filteredGitHubRepositoriesList = gitHubRepositories
+            case .none:
+                return
+            }
+         
             
         case .loadMore:
-            self.gitHubRepositoriesList.append(contentsOf: gitHubRepositories)
+            switch gitHubRepositoriesPresenter?.screenSearchMode {
+            case .originalMode:
+                //when user in original mode without no search filter
+                //the user get data within the page range
+                //append data to exisiting items
+                self.gitHubRepositoriesList.append(contentsOf: gitHubRepositories)
+            case .searchMode:
+                //when user type search to filter
+                //the user get data filtered from 0 -> current page range
+                //remove old data found and add fitlered data to screen
+                self.filteredGitHubRepositoriesList.removeAll()
+                self.filteredGitHubRepositoriesList = gitHubRepositories
+            case .none:
+                return
+            }
+            
         }
         DispatchQueue.main.async() {
             self.githubRepositoriesListTableView.reloadData(isEmpty:  self.gitHubRepositoriesList.isEmpty,
@@ -181,15 +219,28 @@ extension GitHubRepositoriesViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
-        return gitHubRepositoriesList.count
-        
+        switch gitHubRepositoriesPresenter?.screenSearchMode {
+        case .originalMode:
+            return gitHubRepositoriesList.count
+        case .searchMode:
+            return filteredGitHubRepositoriesList.count
+        default: break
+        }
+        return 0
     }
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(cellClass: GitHubRepositoryTableViewCell.self)
         if gitHubRepositoriesList.count > 0 {
-            cell.configureCell(githubRepositry: gitHubRepositoriesList[indexPath.row])
+            switch gitHubRepositoriesPresenter?.screenSearchMode {
+            case .originalMode:
+                cell.configureCell(githubRepositry: gitHubRepositoriesList[indexPath.row])
+            case .searchMode:
+                cell.configureCell(githubRepositry: filteredGitHubRepositoriesList[indexPath.row])
+            default: break
+            }
+            
         }
         return cell
         

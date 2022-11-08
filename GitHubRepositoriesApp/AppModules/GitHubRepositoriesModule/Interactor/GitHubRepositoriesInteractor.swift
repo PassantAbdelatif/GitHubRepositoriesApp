@@ -10,9 +10,9 @@ import GitHubRepositoriesNetworkClient
 import CoreData
 class GitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProtocol {
     var page: Int = 1
-    
+    var searchString: String?
     var repositoriesCountPerPage: Int = 10
-
+    
     var presenter: InteractorToPresenterGitHubRepositoriesProtocol?
     
     func getGitHubRepositoriesSearchResult(gitHubRepositoriesToFilter: [GitHubRepository],
@@ -65,7 +65,7 @@ class GitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProto
     
     func getGitHubRepositoriesSavedInCoreDataPerPage() {
         var gitHubRepositoriesPerPage: [GitHubRepositoryToView] = [GitHubRepositoryToView]()
-        if let allGitHubRepositories: [NSManagedObject] = NetworkClient.shared.allGitHubRepositroies() {
+        if let allGitHubRepositories: [NSManagedObject] = NetworkClient.shared.allGitHubRepositroies(searchString: searchString) {
            
             let EndRange = (page * repositoriesCountPerPage)
             let startRange = EndRange - repositoriesCountPerPage
@@ -83,7 +83,11 @@ class GitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProto
                
             }
             if EndRange <= allGitHubRepositories.count {
-                gitHubRepositoriesPerPage = gitHubRepositoriesPerPage[range: startRange..<EndRange]
+                if searchString != nil {
+                    gitHubRepositoriesPerPage = gitHubRepositoriesPerPage[range: 0..<EndRange]
+                } else {
+                    gitHubRepositoriesPerPage = gitHubRepositoriesPerPage[range: startRange..<EndRange]
+                }
             }
            // photos.sorted{ $0.creationDate < $1.creationDate }
             

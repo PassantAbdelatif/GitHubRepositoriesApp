@@ -83,9 +83,10 @@ public class NetworkClient {
 
     
     // MARK: Network recording
-    public func allGitHubRepositroies() -> [NSManagedObject]? {
+    public func allGitHubRepositroies(searchString: String? = nil) -> [NSManagedObject]? {
         //fatalError("Not implemented")
-        if let allRequests = NetworkDataManager.shared.fetch(entity: GitHubRepository.self) {
+        if let allRequests = NetworkDataManager.shared.fetch(entity: GitHubRepository.self,
+                                                             searchString: searchString) {
             return allRequests
         }
         return nil
