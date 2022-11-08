@@ -54,13 +54,14 @@ public class NetworkClient {
                         let managedObjectContext = NetworkDataManager.shared.backgroundContext
                         let decoder = JSONDecoder()
                         decoder.userInfo[codingUserInfoKeyManagedObjectContext] = managedObjectContext
-                        _ = try decoder.decode([T].self, from: result)
-                      
+                        let dataArr = try decoder.decode([T].self, from: result)
+                    
+                        //print(dataArr)
                         try managedObjectContext.save()
                         
                        completionHandler(.success([]))
                     } catch let error {
-                        print(String(data: result, encoding: .utf8) ?? "nothing received")
+                        //print(String(data: result, encoding: .utf8) ?? "nothing received")
                         completionHandler(.failure(error))
                     }
                 default:
@@ -76,7 +77,6 @@ public class NetworkClient {
                     }
                 }
             }
-            
         }.resume()
     }
     
@@ -89,5 +89,9 @@ public class NetworkClient {
             return allRequests
         }
         return nil
+    }
+    
+    public func resetCoreData() {
+        NetworkDataManager.shared.resetAllCoreData()
     }
 }

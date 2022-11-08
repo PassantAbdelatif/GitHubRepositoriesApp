@@ -15,6 +15,7 @@ public class Owner: NSManagedObject, Codable {
     enum CodingKeys: String, CodingKey {
         case login = "login"
         case avatarUrl = "avatar_url"
+        case ownerId = "id"
     }
     required convenience public init(from decoder: Decoder) throws {
         
@@ -28,7 +29,7 @@ public class Owner: NSManagedObject, Codable {
         self.init(entity: entity, insertInto: managedObjectContext)
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
+        ownerId = try container.decodeIfPresent(Int32.self, forKey: .ownerId) ?? 0
         login = try container.decodeIfPresent(String.self, forKey: .login)
         avatarUrl = try container.decodeIfPresent(String.self, forKey: .avatarUrl)
     }
@@ -47,16 +48,19 @@ public class Owner: NSManagedObject, Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(login, forKey: .login)
         try container.encode(avatarUrl, forKey: .avatarUrl)
+        try container.encode(ownerId, forKey: .ownerId)
     }
 }
 
 extension Owner {
     func toOwnerModel() -> OwnerToView {
         return OwnerToView(name: self.login,
-                           avatarUrl: self.avatarUrl)
+                           avatarUrl: self.avatarUrl,
+                           ownerId: self.ownerId)
     }
 }
 struct OwnerToView {
     let name: String?
     let avatarUrl: String?
+    let ownerId: Int32?
 }

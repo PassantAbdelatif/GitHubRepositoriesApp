@@ -18,5 +18,5 @@ extension Owner {
 
     @NSManaged public var login: String?
     @NSManaged public var avatarUrl: String?
-
+    @NSManaged public var ownerId: Int32
 }

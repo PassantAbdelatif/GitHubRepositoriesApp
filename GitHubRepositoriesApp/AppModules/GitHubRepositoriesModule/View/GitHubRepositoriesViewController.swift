@@ -95,9 +95,7 @@ extension GitHubRepositoriesViewController {
             
         }
         self.githubRepositoriesListTableView.setupRefresh {
-            self.updateListStatus = .refresh
-            self.gitHubRepositoriesPresenter?.page = 1
-            self.gitHubRepositoriesPresenter?.getGitHubRepositoriesPerPage()
+            self.getGitHubRepositories()
         }
     }
     

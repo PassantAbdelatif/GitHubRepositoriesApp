@@ -17,6 +17,7 @@ extension CodingUserInfoKey {
 public class GitHubRepository: NSManagedObject, Codable {
     
     enum CodingKeys: String, CodingKey {
+        case repositoryId = "id"
         case name = "name"
         case owner = "owner"
     }
@@ -33,7 +34,7 @@ public class GitHubRepository: NSManagedObject, Codable {
         self.init(entity: entity, insertInto: managedObjectContext)
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
+        repositoryId = try container.decodeIfPresent(Int32.self, forKey: .repositoryId) ?? 0
         name = try container.decodeIfPresent(String.self, forKey: .name)
         owner = try container.decodeIfPresent(Owner.self, forKey: .owner)
     }
@@ -43,6 +44,9 @@ public class GitHubRepository: NSManagedObject, Codable {
 
         if let value = owner { dictionary[CodingKeys.owner.rawValue] = value.dictionaryRepresentation() }
         if let value = name { dictionary[CodingKeys.name.rawValue] = value }
+        if let value = repositoryId as? Int32 {
+            dictionary[CodingKeys.repositoryId.rawValue] = value
+        }
     
       return dictionary
     }
@@ -52,6 +56,7 @@ public class GitHubRepository: NSManagedObject, Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(name, forKey: .name)
         try container.encode(owner, forKey: .owner)
+        try container.encode(repositoryId, forKey: .repositoryId)
     }
     
     
@@ -59,6 +64,7 @@ public class GitHubRepository: NSManagedObject, Codable {
 
 struct GitHubRepositoryToView {
     let name: String?
+    let repositoryId: Int32?
     let owner: OwnerToView?
 }
 
@@ -66,9 +72,10 @@ struct GitHubRepositoryToView {
 
 extension GitHubRepository {
     func toGitHubRepositoryModel() -> GitHubRepositoryToView {
-        let owner = self.owner as? Owner
+        let owner = self.owner
         
         return GitHubRepositoryToView(name: self.name,
+                                      repositoryId: self.repositoryId,
                                       owner:  owner?.toOwnerModel())
     }
 }

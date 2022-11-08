@@ -60,6 +60,8 @@ public class NetworkDataManager {
         self.backgroundContext.performAndWait {
             
             if let fetchRequest: NSFetchRequest<T> = T.fetchRequest() as? NSFetchRequest<T> {
+                let sortDescriptor = NSSortDescriptor(key: "repositoryId", ascending: true)
+                fetchRequest.sortDescriptors = [sortDescriptor]
                 do {
                 results = try self.backgroundContext.fetch(fetchRequest) as! [T]
                 } catch let fetchErr {
@@ -71,7 +73,22 @@ public class NetworkDataManager {
         }
         return results
     }
-    
+    func resetAllCoreData() {
+
+         // get all entities and loop over them
+         let entityNames = self.persistentContainer.managedObjectModel.entities.map({ $0.name!})
+         entityNames.forEach { [weak self] entityName in
+            let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+
+            do {
+                try self?.backgroundContext.execute(deleteRequest)
+                try self?.backgroundContext.save()
+            } catch {
+                // error
+            }
+        }
+    }
     public func deleteAllRecords<T: NSManagedObject>(entity: T.Type) {
       
         // Perform operations on the background context

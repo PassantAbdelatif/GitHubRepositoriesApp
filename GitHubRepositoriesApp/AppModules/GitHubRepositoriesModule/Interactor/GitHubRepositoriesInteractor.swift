@@ -21,12 +21,20 @@ class GitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProto
     }
     func getGitHubRepositoriesPerPage(screenSearchMode: GitHubRepositoriesSearchViewMode) {
         if page == 1 && screenSearchMode == .originalMode {
+            //first check if core data
             //first time to get your data from network
             //or user make pull to refresh with out making any search
             //you have to clear your coredata
-            NetworkDataManager.shared.deleteAllRecords(entity: GitHubRepository.self)
-            NetworkDataManager.shared.deleteAllRecords(entity: Owner.self)
+            
+            if let allGitHubRepositories: [NSManagedObject] = NetworkClient.shared.allGitHubRepositroies() {
+                if allGitHubRepositories.count > 0 {
+                    NetworkClient.shared.resetCoreData()
+                    
+                }
+                
+            }
             getAllGitHubRepositories()
+           
         } else {
             getGitHubRepositoriesSavedInCoreDataPerPage()
         }
@@ -60,16 +68,15 @@ class GitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProto
         if let allGitHubRepositories: [NSManagedObject] = NetworkClient.shared.allGitHubRepositroies() {
            
             let EndRange = (page * repositoriesCountPerPage)
-            var startRange = EndRange - repositoriesCountPerPage
-            if page == 1 {
-                startRange = 0
-            }
-            
+            let startRange = EndRange - repositoriesCountPerPage
+         
             for gitHubRepository in allGitHubRepositories {
                 if let owner = gitHubRepository.value(forKey: "owner") as? NSManagedObject {
                     let ownerToView = OwnerToView(name: owner.value(forKey: "login") as? String,
-                                                  avatarUrl: owner.value(forKey: "avatarUrl") as? String)
+                                                  avatarUrl: owner.value(forKey: "avatarUrl") as? String,
+                                                  ownerId: owner.value(forKey: "ownerId") as? Int32 )
                     let giHubRepositoryToView = GitHubRepositoryToView(name: gitHubRepository.value(forKey: "name") as? String,
+                                                                       repositoryId: gitHubRepository.value(forKey: "repositoryId") as? Int32,
                                                                        owner: ownerToView)
                     gitHubRepositoriesPerPage.append(giHubRepositoryToView)
                 }
@@ -78,6 +85,7 @@ class GitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProto
             if EndRange <= allGitHubRepositories.count {
                 gitHubRepositoriesPerPage = gitHubRepositoriesPerPage[range: startRange..<EndRange]
             }
+           // photos.sorted{ $0.creationDate < $1.creationDate }
             
             self.presenter?.sendGitHubRepositoriesToPresenter(gitHubRepositories: gitHubRepositoriesPerPage,
                                                               hasNextPage: gitHubRepositoriesPerPage.count < allGitHubRepositories.count)
