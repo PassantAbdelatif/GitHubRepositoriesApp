@@ -52,15 +52,13 @@ public class Owner: NSManagedObject, Codable {
     }
 }
 
-extension Owner {
-    func toOwnerModel() -> OwnerToView {
-        return OwnerToView(name: self.login,
-                           avatarUrl: self.avatarUrl,
-                           ownerId: self.ownerId)
-    }
-}
 struct OwnerToView {
     let name: String?
     let avatarUrl: String?
     let ownerId: Int32?
+    init(managedObject: NSManagedObject) {
+        self.name = managedObject.value(forKey: "login") as? String
+        self.avatarUrl = managedObject.value(forKey: "avatarUrl") as? String
+        self.ownerId = managedObject.value(forKey: "ownerId") as? Int32
+    }
 }

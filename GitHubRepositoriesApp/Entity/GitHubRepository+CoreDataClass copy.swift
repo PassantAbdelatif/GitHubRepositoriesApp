@@ -65,17 +65,14 @@ public class GitHubRepository: NSManagedObject, Codable {
 struct GitHubRepositoryToView {
     let name: String?
     let repositoryId: Int32?
-    let owner: OwnerToView?
-}
-
-
-
-extension GitHubRepository {
-    func toGitHubRepositoryModel() -> GitHubRepositoryToView {
-        let owner = self.owner
-        
-        return GitHubRepositoryToView(name: self.name,
-                                      repositoryId: self.repositoryId,
-                                      owner:  owner?.toOwnerModel())
+    var owner: OwnerToView?
+    init(managedObject: NSManagedObject) {
+        self.name = managedObject.value(forKey: "name") as? String
+        self.repositoryId = managedObject.value(forKey: "repositoryId") as? Int32
+        if let owner = managedObject.value(forKey: "owner") as? NSManagedObject {
+            let ownerToView = OwnerToView(managedObject: owner)
+            self.owner = ownerToView
+        }
     }
 }
+

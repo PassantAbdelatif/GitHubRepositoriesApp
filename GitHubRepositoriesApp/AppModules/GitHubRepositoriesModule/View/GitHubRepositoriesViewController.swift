@@ -32,7 +32,6 @@ class GitHubRepositoriesViewController: BaseViewController {
     override func viewDidLoad() {
         setUpUI()
         registerCells()
-        
         GitHubRepositoriesRouter.createModule(gitHubRepositoriesViewController: self)
         getGitHubRepositories()
         
@@ -40,9 +39,6 @@ class GitHubRepositoriesViewController: BaseViewController {
 }
 // MARK: Actions
 extension GitHubRepositoriesViewController {
-    @IBAction func searchButtonAction(_ sender: Any) {
-        
-    }
     @objc private func textDidChange(sender: UITextField) {
         if let searchText = self.searchTextField.text,
            searchText.count >= 2 {
@@ -57,7 +53,6 @@ extension GitHubRepositoriesViewController {
             } else {
                 self.updateListStatus = .refresh
             }
-            
             self.githubRepositoriesListTableView.reloadData()
         }
     }
@@ -70,9 +65,7 @@ extension GitHubRepositoriesViewController {
         gitHubRepositoriesPresenter?.repositoriesCountPerPage = 10
         updateListStatus = .refresh
         gitHubRepositoriesPresenter?.screenSearchMode = .originalMode
-        
         gitHubRepositoriesPresenter?.getGitHubRepositoriesPerPage()
-        
     }
     
     func getFilteredGitHubRepositories() {
@@ -134,60 +127,59 @@ extension GitHubRepositoriesViewController: PresenterToViewGitHubRepositoriesPro
         case .refresh:
             switch gitHubRepositoriesPresenter?.screenSearchMode {
             case .originalMode:
-                self.gitHubRepositoriesList.removeAll()
-                self.gitHubRepositoriesList = gitHubRepositories
+                gitHubRepositoriesList.removeAll()
+                gitHubRepositoriesList = gitHubRepositories
+                refreshTableViewWithEmptyView(gitHubRepositories: gitHubRepositoriesList)
             case .searchMode:
-                self.filteredGitHubRepositoriesList.removeAll()
-                self.filteredGitHubRepositoriesList = gitHubRepositories
+                filteredGitHubRepositoriesList.removeAll()
+                filteredGitHubRepositoriesList = gitHubRepositories
+                refreshTableViewWithEmptyView(gitHubRepositories: filteredGitHubRepositoriesList)
             case .none:
                 return
             }
          
-            
         case .loadMore:
             switch gitHubRepositoriesPresenter?.screenSearchMode {
             case .originalMode:
                 //when user in original mode without no search filter
                 //the user get data within the page range
                 //append data to exisiting items
-                self.gitHubRepositoriesList.append(contentsOf: gitHubRepositories)
+                gitHubRepositoriesList.append(contentsOf: gitHubRepositories)
+                refreshTableViewWithEmptyView(gitHubRepositories: gitHubRepositoriesList)
             case .searchMode:
                 //when user type search to filter
                 //the user get data filtered from 0 -> current page range
                 //remove old data found and add fitlered data to screen
-                self.filteredGitHubRepositoriesList.removeAll()
-                self.filteredGitHubRepositoriesList = gitHubRepositories
+                filteredGitHubRepositoriesList.removeAll()
+                filteredGitHubRepositoriesList = gitHubRepositories
+                refreshTableViewWithEmptyView(gitHubRepositories: filteredGitHubRepositoriesList)
             case .none:
                 return
             }
-            
         }
+    }
+    
+    func refreshTableViewWithEmptyView(gitHubRepositories: [GitHubRepositoryToView]) {
         DispatchQueue.main.async() {
-            self.githubRepositoriesListTableView.reloadData(isEmpty:  self.gitHubRepositoriesList.isEmpty,
+            self.githubRepositoriesListTableView.reloadData(isEmpty:  gitHubRepositories.isEmpty,
                                              noDataView: self.emptyView)
             self.githubRepositoriesListTableView.endLoadingMoreAndRefreshing()
         }
     }
-    
-    func sendFilteredGitHubRepositoriesToView(gitHubRepositories: [GitHubRepositoryToView]) {
-        
-    }
-    
 
     func startViewLoader() {
-        spinner?.startAnimating()
-        githubRepositoriesListTableView.backgroundView = spinner
+        DispatchQueue.main.async() {
+            self.spinner?.startAnimating()
+            self.githubRepositoriesListTableView.backgroundView = self.spinner
+        }
     }
-    
     func endViewLoader() {
         DispatchQueue.main.async() {
             self.spinner?.stopAnimating()
             self.spinner?.hidesWhenStopped = true
             self.githubRepositoriesListTableView.backgroundView = nil
         }
-       
-    }
-    
+   }
     func sendErrorToView(error: String) {
         DispatchQueue.main.async() {
             
@@ -210,12 +202,9 @@ extension GitHubRepositoriesViewController: PresenterToViewGitHubRepositoriesPro
                          completion: nil)
         }
     }
-    
 }
-
 // MARK: UITableViewDataSource
 extension GitHubRepositoriesViewController: UITableViewDataSource {
-    
     
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
@@ -240,12 +229,9 @@ extension GitHubRepositoriesViewController: UITableViewDataSource {
                 cell.configureCell(githubRepositry: filteredGitHubRepositoriesList[indexPath.row])
             default: break
             }
-            
         }
         return cell
-        
     }
-    
 }
 // MARK: UITableViewDelegate
 extension GitHubRepositoriesViewController: UITableViewDelegate {
@@ -255,7 +241,6 @@ extension GitHubRepositoriesViewController: UITableViewDelegate {
         return UITableView.automaticDimension
     }
 }
-
 
 // MARK: UITextFieldDelegate
 extension GitHubRepositoriesViewController: UITextFieldDelegate {

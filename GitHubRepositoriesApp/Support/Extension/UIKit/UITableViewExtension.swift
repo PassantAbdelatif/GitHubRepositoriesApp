@@ -28,5 +28,13 @@ extension UITableView {
             completion?()
         })
     }
+ 
+
+        func reloadDataWithoutScroll() {
+            let offset = contentOffset
+            reloadData()
+            layoutIfNeeded()
+            setContentOffset(offset, animated: false)
+        }
 }
 

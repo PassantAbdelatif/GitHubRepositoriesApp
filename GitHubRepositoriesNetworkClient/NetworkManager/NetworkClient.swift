@@ -37,12 +37,7 @@ public class NetworkClient {
         urlRequest.httpBody = payload
         URLSession.shared.dataTask(with: urlRequest) { data, response, error in
                 
-                var errorDomain: String?
-                var errorCode: Int16?
-                if let error = error as? NSError {
-                    errorCode = Int16(error.code)
-                    errorDomain = error.domain
-                }
+       
 
             if let httpResponse = response as? HTTPURLResponse,
                 let result = data{
@@ -54,7 +49,7 @@ public class NetworkClient {
                         let managedObjectContext = NetworkDataManager.shared.backgroundContext
                         let decoder = JSONDecoder()
                         decoder.userInfo[codingUserInfoKeyManagedObjectContext] = managedObjectContext
-                        let dataArr = try decoder.decode([T].self, from: result)
+                        _ = try decoder.decode([T].self, from: result)
                     
                         //print(dataArr)
                         try managedObjectContext.save()
@@ -71,6 +66,8 @@ public class NetworkClient {
                                                                       from: result)
                         if businessError.count > 0 {
                             completionHandler(.failure(businessError.first!))
+                        } else  if let error = error as? NSError {
+                            completionHandler(.failure(error))
                         }
                     } catch {
                         completionHandler(.failure(NetworkError.parseError))

@@ -13,6 +13,7 @@ class GitHubRepositoryTableViewCell: UITableViewCell {
     @IBOutlet weak var githubRepositryOwnerImageView: UIImageView!
     @IBOutlet weak var githubRepositryNameLabel: UILabel!
     @IBOutlet weak var githubRepositryOwnerNameLabel: UILabel!
+    @IBOutlet weak var repositoryDateLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,15 +21,15 @@ class GitHubRepositoryTableViewCell: UITableViewCell {
     }
     
     func setUpUI() {
-        self.mainContainerView.layer.cornerRadius = 20
-        self.mainContainerView.addPrimaryShadow()
+        mainContainerView.layer.cornerRadius = 20
+        mainContainerView.addPrimaryShadow()
     }
 
     func configureCell(githubRepositry: GitHubRepositoryToView) {
-        self.githubRepositryOwnerImageView.image = UIImage(named: "ic_avater_image")
-        self.githubRepositryOwnerImageView.loadImageUsingCache(withUrl: githubRepositry.owner?.avatarUrl ?? "")
-
-        self.githubRepositryNameLabel.text = githubRepositry.name ?? ""
-        self.githubRepositryOwnerNameLabel.text = githubRepositry.owner?.name ?? ""
+        githubRepositryOwnerImageView.image = UIImage(named: "ic_avater_image")
+        githubRepositryOwnerImageView.loadImageUsingCache(withUrl: githubRepositry.owner?.avatarUrl ?? "")
+        repositoryDateLabel.text = Date().dateFormatTimeToString(format: "EEEE, MMM d, yyyy") //​Thursday, Oct 22, 2020
+        githubRepositryNameLabel.text = githubRepositry.name ?? ""
+        githubRepositryOwnerNameLabel.text = githubRepositry.owner?.name ?? ""
     }
 }

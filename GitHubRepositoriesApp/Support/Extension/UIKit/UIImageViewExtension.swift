@@ -5,44 +5,7 @@
 //  Created by Passant Abdelatif on 07/11/2022.
 //
 
-import Foundation
-import Kingfisher
-
-//extension UIImageView {
-//
-//    func loadImageFromUrl(_ urlStr: String?,
-//                          placeholderImage: UIImage? = nil,
-//                          completion: (() -> Void)? = nil) {
-//        if let url = URL(string: urlStr?.toURLString() ?? "") {
-//            self.kf.setImage(with: url,
-//                             placeholder: placeholderImage) { _ in
-//                                completion?()
-//            }
-//        }
-//    }
-//}
-
-extension UIImageView {
-    func loadImageFromUrl(_ urlStr: String?,
-                          placeholderImage: UIImage? = nil) {
-        if let urlStr = urlStr,
-           !urlStr.isEmpty {
-            
-            self.image = placeholderImage
-            guard let url = URL(string: urlStr) else {
-                return
-            }
-            
-            DispatchQueue.main.async { [weak self] in
-                if let imageData = try? Data(contentsOf: url) {
-                    if let loadedImage = UIImage(data: imageData) {
-                        self?.image = loadedImage
-                    }
-                }
-            }
-        }
-    }
-}
+import UIKit
 
 let imageCache = NSCache<NSString, UIImage>()
 extension UIImageView {
