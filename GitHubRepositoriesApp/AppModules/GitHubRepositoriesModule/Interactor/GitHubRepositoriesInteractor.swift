@@ -75,8 +75,9 @@ class GitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProto
                     gitHubRepositoriesPerPage = gitHubRepositoriesPerPage[range: startRange..<EndRange]
                 }
             }
+            let totalGitHubRepositoriesSaved = NetworkClient.shared.allGitHubRepositroies()?.count ?? 0
             self.presenter?.sendGitHubRepositoriesToPresenter(gitHubRepositories: gitHubRepositoriesPerPage,
-                                                              hasNextPage: gitHubRepositoriesPerPage.count < allGitHubRepositories.count)
+                                                              hasNextPage: gitHubRepositoriesPerPage.count < totalGitHubRepositoriesSaved)
         }
     }
 }
