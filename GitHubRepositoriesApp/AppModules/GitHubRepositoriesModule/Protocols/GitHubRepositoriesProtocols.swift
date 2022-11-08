@@ -44,4 +44,6 @@ protocol PresenterToViewGitHubRepositoriesProtocol {
 
 protocol PresenterToRouterGitHubRepositoriesProtocol {
     static func createModule(gitHubRepositoriesViewController: GitHubRepositoriesViewController)
+    static func pushToGitHubRepositoryDetialsScreen(gitHubRepository: GitHubRepositoryToView,
+                                                    navigationConroller navigationController: UINavigationController)
 }

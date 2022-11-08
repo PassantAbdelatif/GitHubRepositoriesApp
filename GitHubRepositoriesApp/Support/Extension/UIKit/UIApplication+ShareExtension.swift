@@ -1,8 +1,8 @@
 //
 //  UIApplication+ShareExtension.swift
-//  GitHubRepositoriesApp
+//  RecipeSearchApp
 //
-//  Created by Passant Abdelatif on 07/11/2022.
+//  Created by Passant Abdelatif on 06/11/2022.
 //
 
 import UIKit

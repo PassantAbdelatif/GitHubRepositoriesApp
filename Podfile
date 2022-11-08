@@ -6,11 +6,13 @@ target 'GitHubRepositoriesApp' do
   use_frameworks!
 
   # Pods for GitHubRepositoriesApp
+  # Pods for GitHubRepositoriesApp
   pod 'SwiftMessages’
   pod 'IQKeyboardManagerSwift’
   
   pod 'SwiftPullToRefresh'
   pod "SwiftyMocky"
+
 
   target 'GitHubRepositoriesAppTests' do
     inherit! :search_paths
@@ -20,5 +22,13 @@ target 'GitHubRepositoriesApp' do
   target 'GitHubRepositoriesAppUITests' do
     # Pods for testing
   end
+
+end
+
+target 'GitHubRepositoriesNetworkClient' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for GitHubRepositoriesNetworkClient
 
 end

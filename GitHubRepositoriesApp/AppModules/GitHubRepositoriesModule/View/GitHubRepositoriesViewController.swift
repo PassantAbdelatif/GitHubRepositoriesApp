@@ -191,15 +191,7 @@ extension GitHubRepositoriesViewController: PresenterToViewGitHubRepositoriesPro
                 self.githubRepositoriesListTableView.reloadData()
             }
             self.githubRepositoriesListTableView.endLoadingMoreAndRefreshing()
-            let alert = UIAlertController(title: "Error",
-                                          message: error,
-                                          preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "OK",
-                                          style: UIAlertAction.Style.default,
-                                          handler: nil))
-            self.present(alert,
-                         animated: true,
-                         completion: nil)
+            self.showAlert(title: "Error", message: error)
         }
     }
 }
@@ -231,6 +223,20 @@ extension GitHubRepositoriesViewController: UITableViewDataSource {
             }
         }
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch gitHubRepositoriesPresenter?.screenSearchMode {
+        case .searchMode:
+            GitHubRepositoriesRouter.pushToGitHubRepositoryDetialsScreen(gitHubRepository: filteredGitHubRepositoriesList[indexPath.row],
+                                                                         navigationConroller: self.navigationController!)
+        case .originalMode:
+            GitHubRepositoriesRouter.pushToGitHubRepositoryDetialsScreen(gitHubRepository: gitHubRepositoriesList[indexPath.row],
+                                                                         navigationConroller: self.navigationController!)
+        default:
+            break
+        }
+       
     }
 }
 // MARK: UITableViewDelegate

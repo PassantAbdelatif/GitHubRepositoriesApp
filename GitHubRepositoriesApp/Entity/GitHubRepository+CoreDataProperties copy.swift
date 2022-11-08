@@ -17,6 +17,8 @@ extension GitHubRepository {
     }
 
     @NSManaged public var name: String?
+    @NSManaged public var url: String?
+    @NSManaged public var repositoryDescription: String?
     @NSManaged public var owner: Owner?
     @NSManaged public var repositoryId: Int32
 

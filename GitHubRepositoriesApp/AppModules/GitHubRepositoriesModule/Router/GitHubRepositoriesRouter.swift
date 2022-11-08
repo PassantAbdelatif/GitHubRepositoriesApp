@@ -20,4 +20,11 @@ class GitHubRepositoriesRouter: PresenterToRouterGitHubRepositoriesProtocol {
         gitHubRepositoriesViewController.gitHubRepositoriesPresenter?.gitHubRepositoriesInteractor?.presenter = presenter
     }
     
+    static func pushToGitHubRepositoryDetialsScreen(gitHubRepository: GitHubRepositoryToView,
+                                          navigationConroller navigationController: UINavigationController) {
+        let gitHubRepositoryDetailsModuel = GitHubRepositoryDetailsRouter.createModule(gitHubRepositoriesDetailsViewController: GitHubRepositoriesDetailsViewController())
+        gitHubRepositoryDetailsModuel.gitHubRepositoriesDetailsPresenter?.gitHubRepositoryDetails = gitHubRepository
+        navigationController.pushViewController(gitHubRepositoryDetailsModuel,
+                                                animated: true)
+    }
 }
