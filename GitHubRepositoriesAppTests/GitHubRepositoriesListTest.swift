@@ -1,20 +1,22 @@
 //
-//  GitHubRepositoriesAppTests.swift
+//  GitHubRepositoriesListTest.swift
 //  GitHubRepositoriesAppTests
 //
-//  Created by Passant Abdelatif on 07/11/2022.
+//  Created by Passant Abdelatif on 08/11/2022.
 //
 
 import XCTest
 @testable import GitHubRepositoriesApp
 
 
-class GitHubRepositoriesListTests: XCTestCase {
+class GitHubRepositoriesListTest: XCTestCase {
 
-    var presenter: GitHubReposotriesListPeresnter!
+    var sut: GitHubRepositoriesViewController!
+    
+    var presenter: GitHubRepositoriesListPresenter!
  
     override func setUp()  {
-        self.presenter = GitHubReposotriesListPeresnter()
+        self.presenter = GitHubRepositoriesListPresenter()
     }
 
     override func tearDown()  {
@@ -33,4 +35,8 @@ class GitHubRepositoriesListTests: XCTestCase {
         }
         XCTAssertTrue(presenter === (viewController.gitHubRepositoriesPresenter as! GitHubRepositoriesPresenter))
     }
+    
+
+    
+   
 }

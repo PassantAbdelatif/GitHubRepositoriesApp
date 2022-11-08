@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import GitHubRepositoriesNetworkClient
 class GitHubRepositoriesRouter: PresenterToRouterGitHubRepositoriesProtocol {
  
     static func createModule(gitHubRepositoriesViewController: GitHubRepositoriesViewController) {
@@ -16,8 +16,10 @@ class GitHubRepositoriesRouter: PresenterToRouterGitHubRepositoriesProtocol {
         
         gitHubRepositoriesViewController.gitHubRepositoriesPresenter?.gitHubRepositoriesInteractor = GitHubRepositoriesInteractor()
         gitHubRepositoriesViewController.gitHubRepositoriesPresenter?.gitHubRepositoriesView = gitHubRepositoriesViewController
-        
         gitHubRepositoriesViewController.gitHubRepositoriesPresenter?.gitHubRepositoriesInteractor?.presenter = presenter
+        
+        let giHubRepositoriesInteractor = GitHubRepositoriesInteractor()
+        giHubRepositoriesInteractor.networkClient = NetworkClient.shared
     }
     
     static func pushToGitHubRepositoryDetialsScreen(gitHubRepository: GitHubRepositoryToView,

@@ -14,6 +14,7 @@ class GitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProto
     var repositoriesCountPerPage: Int = 10
     var presenter: InteractorToPresenterGitHubRepositoriesProtocol?
 
+    var networkClient: NetworkClient?
     func getGitHubRepositoriesPerPage(screenSearchMode: GitHubRepositoriesSearchViewMode) {
         if page == 1 && screenSearchMode == .originalMode {
             //first check if core data
@@ -21,9 +22,9 @@ class GitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProto
             //or user make pull to refresh with out making any search
             //you have to clear your coredata
             
-            if let allGitHubRepositories: [NSManagedObject] = NetworkClient.shared.allGitHubRepositroies() {
-                if allGitHubRepositories.count > 0 {
-                    NetworkClient.shared.resetCoreData()
+            if let allGitHubRepositories: [NSManagedObject] = networkClient?.allGitHubRepositroies() {
+                if !allGitHubRepositories.isEmpty {
+                    networkClient?.resetCoreData()
                     
                 }
                 
@@ -58,7 +59,7 @@ class GitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProto
     
     func getGitHubRepositoriesSavedInCoreDataPerPage() {
         var gitHubRepositoriesPerPage: [GitHubRepositoryToView] = [GitHubRepositoryToView]()
-        if let allGitHubRepositories: [NSManagedObject] = NetworkClient.shared.allGitHubRepositroies(searchString: searchString) {
+        if let allGitHubRepositories: [NSManagedObject] = networkClient?.allGitHubRepositroies(searchString: searchString) {
             
             let EndRange = (page * repositoriesCountPerPage)
             let startRange = EndRange - repositoriesCountPerPage
@@ -75,7 +76,7 @@ class GitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProto
                     gitHubRepositoriesPerPage = gitHubRepositoriesPerPage[range: startRange..<EndRange]
                 }
             }
-            let totalGitHubRepositoriesSaved = NetworkClient.shared.allGitHubRepositroies()?.count ?? 0
+            let totalGitHubRepositoriesSaved = networkClient?.allGitHubRepositroies()?.count ?? 0
             self.presenter?.sendGitHubRepositoriesToPresenter(gitHubRepositories: gitHubRepositoriesPerPage,
                                                               hasNextPage: gitHubRepositoriesPerPage.count < totalGitHubRepositoriesSaved)
         }
