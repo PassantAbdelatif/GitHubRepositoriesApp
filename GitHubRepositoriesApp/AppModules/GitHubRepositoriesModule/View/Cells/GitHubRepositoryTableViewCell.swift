@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import GitHubRepositoriesNetworkClient
 class GitHubRepositoryTableViewCell: UITableViewCell {
 
     @IBOutlet weak var mainContainerView: UIView!
@@ -23,18 +24,11 @@ class GitHubRepositoryTableViewCell: UITableViewCell {
         self.mainContainerView.addPrimaryShadow()
     }
 
-    func configureCell(githubRepositry: GithubRepositry) {
-        
-        if let owner = githubRepositry.owner,
-           let ownerAvatartUrl = owner.avatarUrl,
-           !ownerAvatartUrl.isEmpty {
-            
-            self.githubRepositryOwnerImageView.loadImageFromUrl(ownerAvatartUrl)
-        } else {
-            self.githubRepositryOwnerImageView.image = UIImage(named: "ic_avater_image")
-        }
-        
+    func configureCell(githubRepositry: GitHubRepositoryToView) {
+        self.githubRepositryOwnerImageView.image = UIImage(named: "ic_avater_image")
+        self.githubRepositryOwnerImageView.loadImageUsingCache(withUrl: githubRepositry.owner?.avatarUrl ?? "")
+
         self.githubRepositryNameLabel.text = githubRepositry.name ?? ""
-        self.githubRepositryOwnerNameLabel.text = githubRepositry.owner?.login ?? ""
+        self.githubRepositryOwnerNameLabel.text = githubRepositry.owner?.name ?? ""
     }
 }

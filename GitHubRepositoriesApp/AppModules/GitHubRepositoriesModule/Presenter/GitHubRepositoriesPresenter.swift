@@ -6,24 +6,32 @@
 //
 
 import Foundation
+
 class GitHubRepositoriesPresenter: ViewToPresenterGitHubRepositoriesProtocol {
-   
     
+    
+    init() {
+        
+    }
+   
     var gitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProtocol?
     var gitHubRepositoriesView: PresenterToViewGitHubRepositoriesProtocol?
     
-    var page: Int?
+    var page = 1
+    var repositoriesCountPerPage: Int = 10
     var hasNext: Bool?
-    var repositoriesCountPerPage: Int?
     var searchString: String?
-    var repositoriesToSearchIn: [GithubRepositry]?
+    var repositoriesToSearchIn: [GitHubRepositoryToView]?
+    var screenSearchMode: GitHubRepositoriesSearchViewMode?
     
     func getGitHubRepositoriesSearchResult() {
         
     }
     
     func getGitHubRepositoriesPerPage() {
-        
+        gitHubRepositoriesInteractor?.page = page
+        gitHubRepositoriesInteractor?.repositoriesCountPerPage = 10
+        gitHubRepositoriesInteractor?.getGitHubRepositoriesPerPage(screenSearchMode: screenSearchMode ?? .originalMode)
     }
     
 
@@ -31,14 +39,14 @@ class GitHubRepositoriesPresenter: ViewToPresenterGitHubRepositoriesProtocol {
 }
 
 extension GitHubRepositoriesPresenter: InteractorToPresenterGitHubRepositoriesProtocol {
-    func sendGitHubRepositoriesToPresenter(gitHubRepositories: [GithubRepositry],
+    func sendGitHubRepositoriesToPresenter(gitHubRepositories: [GitHubRepositoryToView],
                                            hasNextPage: Bool) {
         self.hasNext = hasNextPage
         self.gitHubRepositoriesView?.endViewLoader()
         self.gitHubRepositoriesView?.sendGitHubRepositoriesToView(gitHubRepositories: gitHubRepositories)
     }
     
-    func sendFilteredGitHubRepositoriesToPresenter(gitHubRepositories: [GithubRepositry]) {
+    func sendFilteredGitHubRepositoriesToPresenter(gitHubRepositories: [GitHubRepositoryToView]) {
         self.gitHubRepositoriesView?.endViewLoader()
         self.gitHubRepositoriesView?.sendFilteredGitHubRepositoriesToView(gitHubRepositories: gitHubRepositories)
     }

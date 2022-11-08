@@ -23,7 +23,7 @@ struct NetworkError: Codable, Error, LocalizedError {
     
     init () {}
     
-    var errorDescription: String? {
+    public var errorDescription: String? {
         return self.message
     }
 }

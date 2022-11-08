@@ -11,11 +11,12 @@ protocol ViewToPresenterGitHubRepositoriesProtocol {
     var gitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProtocol? {get set}
     var gitHubRepositoriesView: PresenterToViewGitHubRepositoriesProtocol? {get set}
     
-    var page: Int? {get set}
-    var repositoriesCountPerPage: Int? {get set}
+    var page: Int {get set}
+    var repositoriesCountPerPage: Int {get set}
     var hasNext: Bool? {get set}
     var searchString: String? {get set}
-    var repositoriesToSearchIn: [GithubRepositry]? {get set}
+    var repositoriesToSearchIn: [GitHubRepositoryToView]? {get set}
+    var screenSearchMode: GitHubRepositoriesSearchViewMode? {get set}
     
     func getGitHubRepositoriesSearchResult()
     func getGitHubRepositoriesPerPage()
@@ -23,26 +24,27 @@ protocol ViewToPresenterGitHubRepositoriesProtocol {
 
 protocol PresenterToInteractorGitHubRepositoriesProtocol {
     var presenter: InteractorToPresenterGitHubRepositoriesProtocol? {get set}
+    var page: Int {get set}
+    var repositoriesCountPerPage: Int {get set}
     
-    func getGitHubRepositoriesSearchResult(gitHubRepositoriesToFilter: [GithubRepositry],
+    func getGitHubRepositoriesSearchResult(gitHubRepositoriesToFilter: [GitHubRepository],
                                            searchString: String)
-    func getGitHubRepositoriesPerPage(page: Int,
-                                      repositoriesCountPerPage: Int)
+    func getGitHubRepositoriesPerPage(screenSearchMode: GitHubRepositoriesSearchViewMode)
 }
 
 protocol InteractorToPresenterGitHubRepositoriesProtocol {
-    func sendGitHubRepositoriesToPresenter(gitHubRepositories: [GithubRepositry],
+    func sendGitHubRepositoriesToPresenter(gitHubRepositories: [GitHubRepositoryToView],
                                            hasNextPage: Bool)
     func sendDataFailed(error: String)
-    func sendFilteredGitHubRepositoriesToPresenter(gitHubRepositories: [GithubRepositry])
+    func sendFilteredGitHubRepositoriesToPresenter(gitHubRepositories: [GitHubRepositoryToView])
 }
 
 protocol PresenterToViewGitHubRepositoriesProtocol {
     func startViewLoader()
     func endViewLoader()
-    func sendGitHubRepositoriesToView(gitHubRepositories: [GithubRepositry])
+    func sendGitHubRepositoriesToView(gitHubRepositories: [GitHubRepositoryToView])
     func sendErrorToView(error: String)
-    func sendFilteredGitHubRepositoriesToView(gitHubRepositories: [GithubRepositry])
+    func sendFilteredGitHubRepositoriesToView(gitHubRepositories: [GitHubRepositoryToView])
 }
 
 protocol PresenterToRouterGitHubRepositoriesProtocol {

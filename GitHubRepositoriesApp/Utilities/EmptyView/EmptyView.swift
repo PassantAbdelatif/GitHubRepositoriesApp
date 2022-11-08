@@ -14,7 +14,7 @@ class EmptyView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        Bundle.main.loadNibNamed("RecipeEmptyView", owner: self, options: nil)
+        Bundle.main.loadNibNamed("EmptyView", owner: self, options: nil)
         self.addSubview(view)
     }
     

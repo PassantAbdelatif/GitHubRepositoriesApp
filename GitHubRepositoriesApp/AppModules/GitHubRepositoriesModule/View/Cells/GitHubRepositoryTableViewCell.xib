@@ -21,11 +21,11 @@
                         <rect key="frame" x="20" y="8" width="363" height="142"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="g16-U0-6CZ">
-                                <rect key="frame" x="128" y="20" width="222" height="40"/>
+                                <rect key="frame" x="128" y="20" width="222" height="50.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="repo label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="12E-Pc-a8B" userLabel="repo label">
-                                        <rect key="frame" x="0.0" y="0.0" width="80.5" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="93" height="24"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                         <nil key="highlightedColor"/>
                                         <attributedString key="userComments">
                                             <fragment content="#bc-ignore!"/>
@@ -35,8 +35,8 @@
                                         </userDefinedRuntimeAttributes>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="owner name" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IPW-CS-oNq" userLabel="owner name">
-                                        <rect key="frame" x="0.0" y="25.5" width="69" height="14.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <rect key="frame" x="0.0" y="29" width="103" height="21.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                         <color key="textColor" systemColor="systemGrayColor"/>
                                         <nil key="highlightedColor"/>
                                         <attributedString key="userComments">
@@ -65,6 +65,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Tmb-ud-aMf" firstAttribute="leading" secondItem="c3e-Zl-Mzp" secondAttribute="leading" constant="13" id="A8v-KJ-WqN"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Tmb-ud-aMf" secondAttribute="bottom" constant="22" id="KXN-54-R1v"/>
                             <constraint firstItem="g16-U0-6CZ" firstAttribute="leading" secondItem="Tmb-ud-aMf" secondAttribute="trailing" constant="15" id="SDi-1K-m00"/>
                             <constraint firstItem="Tmb-ud-aMf" firstAttribute="top" secondItem="c3e-Zl-Mzp" secondAttribute="top" constant="20" id="TYB-Gt-AEo"/>
                             <constraint firstItem="g16-U0-6CZ" firstAttribute="top" secondItem="Tmb-ud-aMf" secondAttribute="top" id="XD9-ap-Uhc"/>

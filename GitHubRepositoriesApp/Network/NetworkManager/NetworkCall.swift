@@ -13,7 +13,7 @@ class NetworkCall : NSObject{
     var url :String! = Configuration.baseURL
     var encoding: ParameterEncoding! = JSONEncoding.default
     
-    init(data: [String:Any],
+    init(data: [String: Any],
          headers: [String:String] = [:],
          url :String?,
          service :services? = nil,

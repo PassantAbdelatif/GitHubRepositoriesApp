@@ -7,17 +7,20 @@
 
 import Foundation
 import UIKit
-import SwiftUI
+import CoreData
+enum GitHubRepositoriesSearchViewMode {
+    case originalMode
+    case searchMode
+}
+
 class GitHubRepositoriesViewController: BaseViewController {
     // MARK: Outlets
     @IBOutlet weak var searchView: UIView!
     @IBOutlet weak var githubRepositoriesListTableView: UITableView!
     @IBOutlet weak var searchTextField: UITextField!
-    
-
-    
+   
     // MARK: Properties
-    var gitHubRepositoriesList = [GithubRepositry]()
+    var gitHubRepositoriesList: [GitHubRepositoryToView] = [GitHubRepositoryToView]()
     var gitHubRepositoriesPresenter: ViewToPresenterGitHubRepositoriesProtocol?
     var spinner: UIActivityIndicatorView?
     lazy var emptyView : EmptyView = {
@@ -30,18 +33,13 @@ class GitHubRepositoriesViewController: BaseViewController {
         registerCells()
         
         GitHubRepositoriesRouter.createModule(gitHubRepositoriesViewController: self)
+        getGitHubRepositories()
         
-        self.searchTextField.addTarget(self,
-                                       action: #selector(textDidChange(sender:)),
-                                       for: .editingChanged)
     }
 }
-
 // MARK: Actions
 extension GitHubRepositoriesViewController {
     @IBAction func searchButtonAction(_ sender: Any) {
-        
-       
         
     }
     @objc private func textDidChange(sender: UITextField) {
@@ -49,17 +47,32 @@ extension GitHubRepositoriesViewController {
            searchText.count >= 2 {
             gitHubRepositoriesPresenter?.searchString = searchText
             gitHubRepositoriesPresenter?.repositoriesToSearchIn = self.gitHubRepositoriesList
-            self.updateListStatus = .refresh
-            self.gitHubRepositoriesPresenter?.getGitHubRepositoriesSearchResult()
+            gitHubRepositoriesPresenter?.screenSearchMode = .searchMode
+            updateListStatus = .refresh
+            gitHubRepositoriesPresenter?.getGitHubRepositoriesPerPage()
         }
     }
 
 }
-
+// MARK: Get GitHub Repositories
+extension GitHubRepositoriesViewController {
+    func getGitHubRepositories()  {
+        gitHubRepositoriesPresenter?.page = 1
+        gitHubRepositoriesPresenter?.repositoriesCountPerPage = 10
+        updateListStatus = .refresh
+        gitHubRepositoriesPresenter?.screenSearchMode = .originalMode
+        
+        gitHubRepositoriesPresenter?.getGitHubRepositoriesPerPage()
+        
+    }
+}
 // MARK: SetUpUI & Register Cells
 extension GitHubRepositoriesViewController {
     func setUpUI() {
         self.title = Constants.ScreenTitles.repositoriesSearchScreen
+        self.searchTextField.addTarget(self,
+                                       action: #selector(textDidChange(sender:)),
+                                       for: .editingChanged)
         self.searchView.addPrimaryShadow()
         if #available(iOS 13.0, *) {
             spinner = UIActivityIndicatorView(style: .medium)
@@ -72,6 +85,7 @@ extension GitHubRepositoriesViewController {
             self.updateListStatus = .loadMore
             if let hasNext = self.gitHubRepositoriesPresenter?.hasNext,
                hasNext {
+                self.gitHubRepositoriesPresenter?.page += 1
                 self.gitHubRepositoriesPresenter?.getGitHubRepositoriesPerPage()
             } else {
                 DispatchQueue.main.async() {
@@ -82,6 +96,7 @@ extension GitHubRepositoriesViewController {
         }
         self.githubRepositoriesListTableView.setupRefresh {
             self.updateListStatus = .refresh
+            self.gitHubRepositoriesPresenter?.page = 1
             self.gitHubRepositoriesPresenter?.getGitHubRepositoriesPerPage()
         }
     }
@@ -101,7 +116,7 @@ extension GitHubRepositoriesViewController {
 }
 // MARK: GetData
 extension GitHubRepositoriesViewController: PresenterToViewGitHubRepositoriesProtocol {
-    func sendGitHubRepositoriesToView(gitHubRepositories: [GithubRepositry]) {
+    func sendGitHubRepositoriesToView(gitHubRepositories: [GitHubRepositoryToView]) {
         switch self.updateListStatus {
         case .refresh:
             
@@ -111,12 +126,14 @@ extension GitHubRepositoriesViewController: PresenterToViewGitHubRepositoriesPro
         case .loadMore:
             self.gitHubRepositoriesList.append(contentsOf: gitHubRepositories)
         }
-        githubRepositoriesListTableView.reloadData(isEmpty:  self.gitHubRepositoriesList.isEmpty,
+        DispatchQueue.main.async() {
+            self.githubRepositoriesListTableView.reloadData(isEmpty:  self.gitHubRepositoriesList.isEmpty,
                                              noDataView: self.emptyView)
-        githubRepositoriesListTableView.endLoadingMoreAndRefreshing()
+            self.githubRepositoriesListTableView.endLoadingMoreAndRefreshing()
+        }
     }
     
-    func sendFilteredGitHubRepositoriesToView(gitHubRepositories: [GithubRepositry]) {
+    func sendFilteredGitHubRepositoriesToView(gitHubRepositories: [GitHubRepositoryToView]) {
         
     }
     
@@ -127,30 +144,35 @@ extension GitHubRepositoriesViewController: PresenterToViewGitHubRepositoriesPro
     }
     
     func endViewLoader() {
-        spinner?.stopAnimating()
-        spinner?.hidesWhenStopped = true
-        githubRepositoriesListTableView.backgroundView = nil
+        DispatchQueue.main.async() {
+            self.spinner?.stopAnimating()
+            self.spinner?.hidesWhenStopped = true
+            self.githubRepositoriesListTableView.backgroundView = nil
+        }
        
     }
     
     func sendErrorToView(error: String) {
-        spinner?.stopAnimating()
-        spinner?.hidesWhenStopped = true
-        githubRepositoriesListTableView.backgroundView = nil
-        if self.updateListStatus == .refresh {
-            self.gitHubRepositoriesList.removeAll()
-            self.githubRepositoriesListTableView.reloadData()
+        DispatchQueue.main.async() {
+            
+            self.spinner?.stopAnimating()
+            self.spinner?.hidesWhenStopped = true
+            self.githubRepositoriesListTableView.backgroundView = nil
+            if self.updateListStatus == .refresh {
+                self.gitHubRepositoriesList.removeAll()
+                self.githubRepositoriesListTableView.reloadData()
+            }
+            self.githubRepositoriesListTableView.endLoadingMoreAndRefreshing()
+            let alert = UIAlertController(title: "Error",
+                                          message: error,
+                                          preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "OK",
+                                          style: UIAlertAction.Style.default,
+                                          handler: nil))
+            self.present(alert,
+                         animated: true,
+                         completion: nil)
         }
-        githubRepositoriesListTableView.endLoadingMoreAndRefreshing()
-        let alert = UIAlertController(title: "Error",
-                                      message: error,
-                                      preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "OK",
-                                      style: UIAlertAction.Style.default,
-                                      handler: nil))
-        self.present(alert,
-                     animated: true,
-                     completion: nil)
     }
     
 }
