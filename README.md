@@ -1,7 +1,8 @@
 
+
 # GitHubRepositoriesApp
 
-User can use GitHubRepositoriesApp to view public github repositories in a list paginated by 10 items for each page. User can view owner name and photo of each repository.
+User can use GitHubRepositoriesApp to view public github repositories in a list paginated by 10 items for each paginated. User can view owner name and photo of each repository.
 
 
 ## API Reference
@@ -20,6 +21,12 @@ User can use GitHubRepositoriesApp to view public github repositories in a list 
 - adding Unit Tests
 
 
+## NetworkClient Framwork
+
+- you can find thant all requests methods called from networkClient by using Native url sessions
+- after get data sucessfully from Network all data saved to context of coreData
+- hen with each page we fetch data from context with a page range
+
 ## Pods for GitHubRepositoriesApp
 
 - SwiftPullToRefresh
@@ -34,9 +41,6 @@ User can use GitHubRepositoriesApp to view public github repositories in a list 
 - User can search for repository in the main list screen
 
 
-## NetworkClient Framwork
+## Screenshots
 
-- you can find that all requests methods called from networkClient by using Native url sessions
-- after get data sucessfully from Network all data saved to context of coreData
-- then with each page we fetch data from context with a page range
-
+![App Screenshot](file:///Users/PassantAbdelatif/Documents/Screen%20Recording%202022-11-10%20at%201.45.15%20AM.mov)
