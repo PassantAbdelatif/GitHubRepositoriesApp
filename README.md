@@ -1,7 +1,7 @@
 
 # GitHubRepositoriesApp
 
-User can use GitHubRepositoriesApp to view public github repositories in a list paginated by 10 items for each paginated. User can view owner name and photo of each repository.
+User can use GitHubRepositoriesApp to view public github repositories in a list paginated by 10 items for each page. User can view owner name and photo of each repository.
 
 
 ## API Reference
