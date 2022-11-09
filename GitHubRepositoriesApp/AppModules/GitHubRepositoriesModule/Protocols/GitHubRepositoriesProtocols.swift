@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import GitHubRepositoriesNetworkClient
 
 protocol ViewToPresenterGitHubRepositoriesProtocol {
     var gitHubRepositoriesInteractor: PresenterToInteractorGitHubRepositoriesProtocol? {get set}
@@ -25,7 +26,7 @@ protocol PresenterToInteractorGitHubRepositoriesProtocol {
     var page: Int {get set}
     var repositoriesCountPerPage: Int {get set}
     var searchString: String? {get set}
-    
+    var networkClient: NetworkClient? {get set}
     func getGitHubRepositoriesPerPage(screenSearchMode: GitHubRepositoriesSearchViewMode)
     func getAllGitHubRepositories()
     func getGitHubRepositoriesSavedInCoreDataPerPage()

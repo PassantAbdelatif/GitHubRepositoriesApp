@@ -15,11 +15,13 @@ class GitHubRepositoriesRouter: PresenterToRouterGitHubRepositoriesProtocol {
         gitHubRepositoriesViewController.gitHubRepositoriesPresenter = presenter
         
         gitHubRepositoriesViewController.gitHubRepositoriesPresenter?.gitHubRepositoriesInteractor = GitHubRepositoriesInteractor()
+        
         gitHubRepositoriesViewController.gitHubRepositoriesPresenter?.gitHubRepositoriesView = gitHubRepositoriesViewController
         gitHubRepositoriesViewController.gitHubRepositoriesPresenter?.gitHubRepositoriesInteractor?.presenter = presenter
+        gitHubRepositoriesViewController.gitHubRepositoriesPresenter?.gitHubRepositoriesInteractor?.networkClient = NetworkClient.shared
         
-        let giHubRepositoriesInteractor = GitHubRepositoriesInteractor()
-        giHubRepositoriesInteractor.networkClient = NetworkClient.shared
+//        let giHubRepositoriesInteractor = GitHubRepositoriesInteractor()
+//        giHubRepositoriesInteractor.networkClient = NetworkClient.shared
     }
     
     static func pushToGitHubRepositoryDetialsScreen(gitHubRepository: GitHubRepositoryToView,
