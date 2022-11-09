@@ -36,7 +36,7 @@ User can use GitHubRepositoriesApp to view public github repositories in a list 
 
 ## NetworkClient Framwork
 
-- you can find thant all requests methods called from networkClient by using Native url sessions
+- you can find that all requests methods called from networkClient by using Native url sessions
 - after get data sucessfully from Network all data saved to context of coreData
-- hen with each page we fetch data from context with a page range
+- then with each page we fetch data from context with a page range
 
