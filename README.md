@@ -10,8 +10,17 @@ User can use GitHubRepositoriesApp to view public github repositories in a list 
 #### Get all github repositories
 
   https://api.github.com/repositories
+  
 
+## Installation
 
+Install my-project with
+
+```bash
+ Xcode Version 13.3
+ IOS 13
+ macOS Monterey
+```
 
 ## Documentation
 
@@ -49,4 +58,5 @@ User can use GitHubRepositoriesApp to view public github repositories in a list 
 
 
 https://user-images.githubusercontent.com/12607600/200974016-6551261e-46f0-40dd-9102-b2bca2bfd768.mov
+
 
